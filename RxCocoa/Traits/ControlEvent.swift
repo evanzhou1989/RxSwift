@@ -45,7 +45,7 @@ public struct ControlEvent<PropertyType> : ControlEventType {
     /// - parameter events: Observable sequence that represents events.
     /// - returns: Control event created with a observable sequence of events.
     public init<Ev: ObservableType>(events: Ev) where Ev.Element == Element {
-        self.events = events.subscribe(on: ConcurrentMainScheduler.instance)
+        self.events = events.subscribe(on: ConcurrentMainScheduler.instance) // 默认主线程订阅
     }
 
     /// Subscribes an observer to control events.

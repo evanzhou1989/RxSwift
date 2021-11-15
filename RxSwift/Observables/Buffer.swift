@@ -79,7 +79,7 @@ final private class BufferTimeCountSink<Element, Observer: ObserverType>
         
         let buffer = self.buffer
         self.buffer = []
-        self.forwardOn(.next(buffer))
+        self.forwardOn(.next(buffer)) // 发送缓存起来的所有元素
         
         self.createTimer(windowID)
     }
@@ -93,7 +93,7 @@ final private class BufferTimeCountSink<Element, Observer: ObserverType>
         case .next(let element):
             self.buffer.append(element)
             
-            if self.buffer.count == self.parent.count {
+            if self.buffer.count == self.parent.count { // 达到一定数量开始发送元素
                 self.startNewWindowAndSendCurrentOne()
             }
             

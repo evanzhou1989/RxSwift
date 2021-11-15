@@ -70,16 +70,17 @@ public class ReplaySubject<Element>
     /// - returns: New instance of replay subject.
     public static func create(bufferSize: Int) -> ReplaySubject<Element> {
         if bufferSize == 1 {
-            return ReplayOne()
+            return ReplayOne() // 内部用一个 value 变量保存元素
         }
         else {
-            return ReplayMany(bufferSize: bufferSize)
+            return ReplayMany(bufferSize: bufferSize) // 内部用一个 quene 保存元素
         }
     }
 
     /// Creates a new instance of `ReplaySubject` that buffers all the elements of a sequence.
     /// To avoid filling up memory, developer needs to make sure that the use case will only ever store a 'reasonable'
     /// number of elements.
+    /// 回放所有元素
     public static func createUnbounded() -> ReplaySubject<Element> {
         ReplayAll()
     }
@@ -131,8 +132,8 @@ private class ReplayBufferBase<Element>
         
         switch event {
         case .next(let element):
-            self.addValueToBuffer(element)
-            self.trim()
+            self.addValueToBuffer(element) // 保存最新的元素
+            self.trim() // 主要针对 ReplayMany 对 quene 的元素进行处理
             return self.observers
         case .error, .completed:
             self.stoppedEvent = event
@@ -154,7 +155,7 @@ private class ReplayBufferBase<Element>
         }
      
         let anyObserver = observer.asObserver()
-        
+        // 对新的观察者发送最新的元素
         self.replayBuffer(anyObserver)
         if let stoppedEvent = self.stoppedEvent {
             observer.on(stoppedEvent)
@@ -252,7 +253,8 @@ private final class ReplayMany<Element> : ReplayManyBase<Element> {
         
         super.init(queueSize: bufferSize)
     }
-    
+
+    // 超出设置的上限，移除队列前面的元素
     override func trim() {
         while self.queue.count > self.bufferSize {
             _ = self.queue.dequeue()
@@ -264,7 +266,8 @@ private final class ReplayAll<Element> : ReplayManyBase<Element> {
     init() {
         super.init(queueSize: 0)
     }
-    
+
+    // 不做修改，意味记录所有发送的元素
     override func trim() {
         
     }

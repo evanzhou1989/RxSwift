@@ -33,7 +33,7 @@ extension PrimitiveSequenceType where Trait == SingleTrait {
                 switch event {
                 case .success(let element):
                     observer.on(.next(element))
-                    observer.on(.completed)
+                    observer.on(.completed) // 这里发出一个元素后直接发送 completed 事件，所以 Single 只能发出一个元素
                 case .failure(let error):
                     observer.on(.error(error))
                 }
@@ -59,7 +59,7 @@ extension PrimitiveSequenceType where Trait == SingleTrait {
                 observer(.success(element))
             case .error(let error):
                 observer(.failure(error))
-            case .completed:
+            case .completed: // Single 不能发送 completed 事件
                 rxFatalErrorInDebug("Singles can't emit a completion event")
             }
         }

@@ -90,7 +90,7 @@ public final class BehaviorSubject<Element>
         
         switch event {
         case .next(let element):
-            self.element = element
+            self.element = element // 记录最新的元素
         case .error, .completed:
             self.stoppedEvent = event
         }
@@ -118,7 +118,7 @@ public final class BehaviorSubject<Element>
         }
         
         let key = self.observers.insert(observer.on)
-        observer.on(.next(self.element))
+        observer.on(.next(self.element)) // 向新观察者发送最新的元素
     
         return SubscriptionDisposable(owner: self, key: key)
     }

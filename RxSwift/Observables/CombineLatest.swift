@@ -45,7 +45,7 @@ class CombineLatestSink<Observer: ObserverType>
 
         if self.numberOfValues == self.arity {
             do {
-                let result = try self.getResult()
+                let result = try self.getResult() // 获取 combineLatest 传入的 block 内部生成的元素
                 self.forwardOn(.next(result))
             }
             catch let e {
@@ -101,7 +101,7 @@ final class CombineLatestObserver<Element>
     let lock: RecursiveLock
     private let index: Int
     private let this: Disposable
-    private let setLatestValue: ValueSetter
+    private let setLatestValue: ValueSetter // 记录最新的元素
     
     init(lock: RecursiveLock, parent: CombineLatestProtocol, index: Int, setLatestValue: @escaping ValueSetter, this: Disposable) {
         self.lock = lock

@@ -51,7 +51,7 @@ final private class FilterSink<Observer: ObserverType>: Sink<Observer>, Observer
         switch event {
         case .next(let value):
             do {
-                let satisfies = try self.predicate(value)
+                let satisfies = try self.predicate(value) // 过滤元素
                 if satisfies {
                     self.forwardOn(.next(value))
                 }

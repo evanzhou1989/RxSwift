@@ -61,7 +61,7 @@ extension PrimitiveSequenceType where Trait == CompletableTrait, Element == Swif
             stopped = true
             
             switch event {
-            case .next:
+            case .next: // Completable 不能发出元素
                 rxFatalError("Completables can't emit values")
             case .error(let error):
                 observer(.error(error))

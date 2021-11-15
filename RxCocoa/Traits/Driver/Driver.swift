@@ -38,8 +38,10 @@ import RxSwift
 public typealias Driver<Element> = SharedSequence<DriverSharingStrategy, Element>
 
 public struct DriverSharingStrategy: SharingStrategyProtocol {
+    // 默认 MainScheduler
     public static var scheduler: SchedulerType { SharingScheduler.make() }
     public static func share<Element>(_ source: Observable<Element>) -> Observable<Element> {
+        // replay 设置的是 1，所以 Driver 会对新观察者回放（重新发送）上一个元素
         source.share(replay: 1, scope: .whileConnected)
     }
 }

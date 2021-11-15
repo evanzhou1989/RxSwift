@@ -27,6 +27,7 @@ public final class AsyncSubject<Element>
         }
     }
 
+    // 递归锁
     let lock = RecursiveLock()
 
     // state
@@ -37,6 +38,7 @@ public final class AsyncSubject<Element>
             self.isStopped = self.stoppedEvent != nil
         }
     }
+    // 最后一个元素
     private var lastElement: Element?
 
     #if DEBUG
@@ -73,6 +75,7 @@ public final class AsyncSubject<Element>
     }
 
     func synchronized_on(_ event: Event<Element>) -> (Observers, Event<Element>) {
+        // defer 保证 block 里的代码会在函数 return 之前执行
         self.lock.lock(); defer { self.lock.unlock() }
         if self.isStopped {
             return (Observers(), .completed)
@@ -94,6 +97,7 @@ public final class AsyncSubject<Element>
             let observers = self.observers
             self.observers.removeAll()
 
+            // 产生 completed 事件，发出最后一个元素
             if let lastElement = self.lastElement {
                 self.stoppedEvent = .next(lastElement)
                 return (observers, .next(lastElement))

@@ -31,13 +31,14 @@ public struct Binder<Value>: ObserverType {
         self.binding = { event in
             switch event {
             case .next(let element):
+                // 确保绑定都是在给定的 scheduler 上执行（默认 MainScheduler）
                 _ = scheduler.schedule(element) { element in
                     if let target = weakTarget {
                         binding(target, element)
                     }
                     return Disposables.create()
                 }
-            case .error(let error):
+            case .error(let error): // 不会处理错误事件
                 rxFatalErrorInDebug("Binding error: \(error)")
             case .completed:
                 break

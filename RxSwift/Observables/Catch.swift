@@ -174,10 +174,12 @@ final private class CatchSink<Observer: ObserverType>: Sink<Observer>, ObserverT
             self.dispose()
         case .error(let error):
             do {
+                // 拦截 error 事件，将它替换成其他的元素或者一组元素
                 let catchSequence = try self.parent.handler(error)
 
                 let observer = CatchSinkProxy(parent: self)
-                
+
+                // 将替换后的元素传递给观察者
                 self.subscription.disposable = catchSequence.subscribe(observer)
             }
             catch let e {

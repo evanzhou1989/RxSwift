@@ -18,8 +18,8 @@ extension ObservableConvertibleType {
     public func asDriver(onErrorJustReturn: Element) -> Driver<Element> {
         let source = self
             .asObservable()
-            .observe(on:DriverSharingStrategy.scheduler)
-            .catchAndReturn(onErrorJustReturn)
+            .observe(on:DriverSharingStrategy.scheduler) // 主线程监听
+            .catchAndReturn(onErrorJustReturn) // 无法产生错误
         return Driver(source)
     }
     

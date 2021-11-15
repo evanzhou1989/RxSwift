@@ -20,12 +20,12 @@ extension Reactive where Base: UIControl {
                 MainScheduler.ensureRunningOnMainThread()
 
                 guard let control = control else {
-                    observer.on(.completed)
+                    observer.on(.completed) // control 被释放了，产生 completed 事件
                     return Disposables.create()
                 }
 
                 let controlTarget = ControlTarget(control: control, controlEvents: controlEvents) { _ in
-                    observer.on(.next(()))
+                    observer.on(.next(())) // 发出元素
                 }
 
                 return Disposables.create(with: controlTarget.dispose)

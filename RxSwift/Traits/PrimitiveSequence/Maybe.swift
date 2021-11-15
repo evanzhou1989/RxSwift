@@ -43,7 +43,7 @@ extension PrimitiveSequenceType where Trait == MaybeTrait {
                 switch event {
                 case .success(let element):
                     observer.on(.next(element))
-                    observer.on(.completed)
+                    observer.on(.completed) // Maybe 发出一个元素后也会产生 completed 事件，所以也只能发出一个元素
                 case .error(let error):
                     observer.on(.error(error))
                 case .completed:
